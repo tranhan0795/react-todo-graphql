@@ -12,16 +12,14 @@ mutation AddTodo($description: String) {
     id
   }
 }
-
 `;
-
 
 const NewTodo = () => {
 
     const [newTodo, setNewTodo] = useState('');
 
-    const [addTodo, {data, error}] = useMutation(ADD_TODO,{
-        refetchQueries: [
+    const [addTodo, { error}] = useMutation(ADD_TODO,{
+        refetchQueries: [ //refetch all todo after add new one
          GET_ALL_TODOS, 
           'Todos' 
         ],
@@ -83,6 +81,5 @@ const NewTodo = () => {
         </div>
     )
 }
-
 
 export default NewTodo;

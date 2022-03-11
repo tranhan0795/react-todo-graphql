@@ -18,8 +18,6 @@ mutation Mutation($isFinished: Int, $description: String, $updateTodoId: Int) {
   }
 }
 `
-
-
 const TodoItem = ({id, description, isFinished}) => {
     const [isEditing, setEditing] = useState(false);
     const [newDesc, setNewDesc] = useState(description);
@@ -44,7 +42,6 @@ const TodoItem = ({id, description, isFinished}) => {
                     id: id,
                 }
             });
-
 
             //Optimistic design
             toast.success('Your todo has been deleted!', {
@@ -71,9 +68,11 @@ const TodoItem = ({id, description, isFinished}) => {
         }
     }
 
-
+    /**
+     * handle update new todo
+     */
     const handleUpdate = () => {
-
+    //check if user submit same input
         if (description === newDesc && isFinished === !!parseInt(newIsFinished)) {
             toast.error('Cannot submit same values', {
                 position: "top-right",
@@ -95,7 +94,7 @@ const TodoItem = ({id, description, isFinished}) => {
             },
         })
 
-        setEditing(false);
+        setEditing(false);//after update change back todo item to normal
 
         //Optimistic design
         toast.success('Your todo has been updated!', {
@@ -162,6 +161,5 @@ const TodoItem = ({id, description, isFinished}) => {
         </div>
     )
 }
-
 
 export default TodoItem;

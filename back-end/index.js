@@ -15,38 +15,30 @@ const typeDefs = gql`
   }
 
   # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  # clients can execute, along with the return type for each. 
+  
   type Query {
     todos: [Todo]
   }
 
   type Mutation{
-    addTodo(description: String):Int
-    deleteTodo(todoId:Int):Boolean
-    updateTodo(todoId:Int,description:String,isFinished:Int):Boolean
+    addTodo(description: String):Todo
+    deleteTodo(id:Int):Int
+    updateTodo(id:Int,description:String,isFinished:Int):Todo
   }
-
 
 `;
 
-const books = [
-  {
-    title: "The Awakening",
-    author: "Kate Chopin",
-  },
-  {
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
-];
 
 // Resolvers define the technique for fetching the types defined in the
 // schema. This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
+    /**
+    * query to get all todo 
+    *@param db - db connection
+    */
     todos: async (_, __, {db}) => {
-
       return new Promise((resolve, reject) => {
         db.query("SELECT * FROM todo", (err, todos) => {
           if (err) {
@@ -58,41 +50,60 @@ const resolvers = {
       });
     },
   },
-  Mutation: {
 
+  Mutation: {
+    /** 
+    * add new todo to db
+    *@param db - db connection
+    *@param description - todo's description
+    */
     addTodo: async (_, {description}, {db}) => {
       return new Promise((res, rej) => {
-        console.log(description);
         db.query(`INSERT INTO todo SET ?`, {description}, (err, result) => {
           if (err) {
             rej(err);
           } else {
-            console.log(result);
-            res(result.insertId);
+            res({
+              id: result.insertId,
+              isFinished: false,
+              description
+            });
           }
         });
       })
     },
 
-    deleteTodo: async (_, {todoId}, {db}) => {
+    /**
+     * delete one todo from db
+     * @param todoId - todo's id to delete 
+     * @param db - db connection
+     */
+    deleteTodo: async (_, {id}, {db}) => {
       return new Promise((res, rej) => {
-        db.query(`DELETE FROM todo WHERE id = ?`, todoId, (err) => {
+        db.query(`DELETE FROM todo WHERE id = ?`, id, (err,result) => {
           if (err) {
             rej(err);
           } else {
-            res(true);
+            res(result.affectedRows);
           }
         });
       })
     },
 
-    updateTodo: async (_, {todoId, description, isFinished}, {db}) => {
+    /**
+     * delete one todo from db
+     * @param todoId - todo's id to delete 
+     * @param description - new description
+     * @param isFinished - new isFinished
+     * @param db - db connection
+     */
+    updateTodo: async (_, {id, description, isFinished}, {db}) => {
       return new Promise((res, rej) => {
-        db.query(`UPDATE todo SET description = ?,isFinished = ?  WHERE id = ?`, [description, isFinished, todoId], (err) => {
+        db.query(`UPDATE todo SET description = ?,isFinished = ?  WHERE id = ?`, [description, isFinished, id], (err) => {
           if (err) {
             rej(err);
           } else {
-            res(true);
+            res({id, description, isFinished});
           }
         });
       })
@@ -106,11 +117,16 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  /*
-  */
+  /* use context to pass db connection to resolvers */
   context: async () => ({
     db: await getDB()
-  })
+  }),
+  formatError: (err) => {
+    if (err.message.startsWith('Database Error: ')) {
+      return new Error('Internal server error');
+    }
+    return err;
+  },
 });
 
 // The `listen` method launches a web server.

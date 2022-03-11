@@ -22,6 +22,11 @@ INSERT INTO todo (description) VALUES ("Hello World");
 
 let dbInit = false;
 
+/** 
+ * create new todo table if not exist
+ * create pooling connection
+ * @return pooling connection
+ */
 const getDB = async () => {
   if (!dbInit) {
     return new Promise((resolve, reject) => {
@@ -34,8 +39,8 @@ const getDB = async () => {
           return resolve(pool);
         }
       });
-    });   
-  }else{
+    });
+  } else {
     return pool;
   }
 
