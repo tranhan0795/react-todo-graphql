@@ -18,12 +18,12 @@ const NewTodo = () => {
 
     const [newTodo, setNewTodo] = useState('');
 
-    const [addTodo, { error}] = useMutation(ADD_TODO,{
+    const [addTodo, {error}] = useMutation(ADD_TODO, {
         refetchQueries: [ //refetch all todo after add new one
-         GET_ALL_TODOS, 
-          'Todos' 
+            GET_ALL_TODOS,
+            'Todos'
         ],
-      });
+    });
 
     const handleAddTodo = () => {
         if (newTodo.length === 0) {
@@ -44,7 +44,7 @@ const NewTodo = () => {
                 description: newTodo
             }
         })
-        
+
         setNewTodo('');
 
         //Optimistic design
@@ -56,19 +56,19 @@ const NewTodo = () => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            });
+        });
+    }
 
-        if (error) {
-            toast.error('Something went wrong your todo may not be added', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
+    if (error) {
+        toast.error('Something went wrong your todo may not be added', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
     }
 
     return (

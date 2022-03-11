@@ -52,27 +52,27 @@ const TodoItem = ({id, description, isFinished}) => {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                });
-
-            if (deleteErr) {
-                toast.error('Something went wrong, your todo may not be deleted', {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-            }
+            });
         }
+    }
+    
+    if (deleteErr) {
+        toast.error('Something went wrong, your todo may not be deleted', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
     }
 
     /**
      * handle update new todo
      */
     const handleUpdate = () => {
-    //check if user submit same input
+        //check if user submit same input
         if (description === newDesc && isFinished === !!parseInt(newIsFinished)) {
             toast.error('Cannot submit same values', {
                 position: "top-right",
@@ -105,20 +105,20 @@ const TodoItem = ({id, description, isFinished}) => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            });
+        });
 
-        if (updateErr) {
-            toast.error('Something went wrong, your todo may not be updated', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
+    }
 
+    if (updateErr) {
+        toast.error('Something went wrong, your todo may not be updated', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
     }
 
     return (
