@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {useMutation, gql} from "@apollo/client";
 import {toast} from 'react-toastify';
 import {GET_ALL_TODOS} from "../App";
@@ -59,17 +59,19 @@ const NewTodo = () => {
         });
     }
 
-    if (error) {
-        toast.error('Something went wrong your todo may not be added', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
-    }
+    useEffect((() => {
+        if (error) {
+            toast.error('Something went wrong, your todo may not be deleted', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+    }), [error])
 
     return (
         <div className="flex px-3 gap-5">

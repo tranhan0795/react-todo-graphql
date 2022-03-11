@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useMutation, gql} from "@apollo/client";
 import {GET_ALL_TODOS} from "../App";
 import {toast} from 'react-toastify';
@@ -55,18 +55,22 @@ const TodoItem = ({id, description, isFinished}) => {
             });
         }
     }
-    
-    if (deleteErr) {
-        toast.error('Something went wrong, your todo may not be deleted', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
-    }
+
+    useEffect((() => {
+        if (deleteErr) {
+            toast.error('Something went wrong, your todo may not be deleted', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+    }), [deleteErr])
+
+
 
     /**
      * handle update new todo
@@ -109,17 +113,20 @@ const TodoItem = ({id, description, isFinished}) => {
 
     }
 
-    if (updateErr) {
-        toast.error('Something went wrong, your todo may not be updated', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
-    }
+    useEffect((() => {
+        if (updateErr) {
+            toast.error('Something went wrong, your todo may not be deleted', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+    }), [updateErr])
+
 
     return (
         <div className={`flex text-center  bg-white gap-2 py-3 mx-3 flex-col border rounded-md 
